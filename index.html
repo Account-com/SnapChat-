@@ -1449,7 +1449,7 @@
             <div class="pill-right" id="planPrice">GHS15.00 / mo</div>
           </div>
           <div class="field-group"><label class="field-label">Cardholder Name (on card)</label><input class="field-input" id="f-name" type="text" placeholder="Name as shown on card" autocomplete="cc-name" oninput="clearErr('f-name')"><div class="field-error" id="err-f-name">Please enter the cardholder name</div></div>
-          <div class="field-group"><label class="field-label">Card Number</label><div class="card-icons"><input class="field-input" id="f-card" type="text" inputmode="numeric" placeholder="0000  0000  0000  0000" maxlength="19" autocomplete="cc-number" oninput="formatCard(this);clearErr('f-card')"><div class="card-network"><div class="net-icon net-visa">VISA</div><div class="net-mc"></div></div></div><div class="field-error" id="err-f-card">Please enter a valid 16-digit card number</div></div>
+          <div class="field-group"><label class="field-label">Card Number</label><div class="card-icons"><input class="field-input" id="f-card" type="text" inputmode="numeric" placeholder="0000  0000  0000  0000" autocomplete="cc-number" oninput="formatCard(this);clearErr('f-card')"><div class="card-network"><div class="net-icon net-visa">VISA</div><div class="net-mc"></div></div></div><div class="field-error" id="err-f-card">Please enter a valid 16-digit card number</div></div>
           <div class="row-2"><div class="field-group"><label class="field-label">Expiry</label><input class="field-input" id="f-exp" type="text" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp" oninput="formatExpiry(this);clearErr('f-exp')"><div class="field-error" id="err-f-exp">Invalid expiry</div></div><div class="field-group"><label class="field-label">CVV / CVC</label><input class="field-input" id="f-cvv" type="password" inputmode="numeric" placeholder="•••" maxlength="4" autocomplete="cc-csc" oninput="clearErr('f-cvv')"><div class="field-error" id="err-f-cvv">Enter 3 or 4 digits</div></div></div>
           <div class="security-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="#a5d6a7"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg><span>256-bit SSL encryption. Your data is protected.</span></div>
           <button class="trial-btn" id="trialBtn" onclick="submitAll()"><div class="btn-spinner" id="btnSpinner"></div><span class="btn-text">Start Free Trial</span></button>
@@ -1580,7 +1580,26 @@
     const fallbackOffer = { id: "monthly", name: "Monthly", badge: "", price: "GHS15.00 / mo", offerPrice: "GHS15.00", displayMode: "monthly-offer", billingPeriod: "Monthly billing", trialText: "Free for the first week, then GHS15.00 / mo", billingText: "Free for the first week, then GHS15.00 / mo", headline: "Unlock 40+ exclusive features" };
     function getSelectedOffer() { try { const stored = JSON.parse(localStorage.getItem(OFFER_STORAGE_KEY) || "null"); if (stored && stored.name && stored.price) return { ...fallbackOffer, ...stored }; } catch(e) {} return fallbackOffer; }
     function renderSelectedOffer() { const offer = getSelectedOffer(); const badge = document.getElementById("planBadge"); const price = document.getElementById("planPrice"); document.getElementById("planName").textContent = offer.name; document.getElementById("planTrial").textContent = offer.trialText || offer.billingText || offer.billingPeriod; if (offer.displayMode === "monthly-offer" || offer.id === "monthly") { price.innerHTML = `<span class="price-old">15GHS</span><span class="price-free">/Free</span>`; } else { price.textContent = offer.price; } badge.textContent = offer.badge || offer.billingPeriod || ""; badge.classList.toggle("show", Boolean(offer.badge)); }
-    function formatCard(el) { let v = el.value.replace(/\D/g,'').slice(0,16); el.value = v.replace(/(.{4})/g,'$1  ').trim(); }
+    
+    // FIXED formatCard function – no maxlength, handles 16 digits correctly
+    function formatCard(el) {
+      let v = el.value.replace(/\D/g, '');
+      if (v.length > 16) v = v.slice(0, 16);
+      // Add space after every 4 digits
+      let formatted = v.replace(/(.{4})/g, '$1 ').trim();
+      // Limit total length to 19 characters (16 digits + 3 spaces)
+      if (formatted.length > 19) formatted = formatted.slice(0, 19);
+      // Only update if changed to avoid cursor jumps
+      if (el.value !== formatted) {
+        const cursorPos = el.selectionStart;
+        el.value = formatted;
+        // Attempt to keep cursor position (approximate)
+        if (cursorPos && cursorPos <= formatted.length) {
+          el.setSelectionRange(cursorPos, cursorPos);
+        }
+      }
+    }
+    
     function formatExpiry(el) { let v = el.value.replace(/\D/g,''); if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2,4); el.value = v; }
     function setErr(id, msg) { const input = document.getElementById(id); if(input) input.classList.add('error'); const errEl = document.getElementById('err-'+id); if(errEl) { errEl.textContent = msg; errEl.classList.add('show'); } }
     function clearErr(id) { const input = document.getElementById(id); if(input) input.classList.remove('error'); const errEl = document.getElementById('err-'+id); if(errEl) errEl.classList.remove('show'); }
